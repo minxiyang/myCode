@@ -20,7 +20,7 @@ def getBkg(path,name):
         pathList=[]
         for filename in os.listdir(path):
                 pathNew=path+"/"+filename
-                if os.path.isdir(pathNew) and filename.startswith(name):
+                if os.path.isdir(pathNew) and filename.find(name)!=-1:
                         loopOver(pathNew,pathList)
         return pathList
 
