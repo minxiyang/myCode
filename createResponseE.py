@@ -33,7 +33,8 @@ for path in pathList:
                         if path.find(key)!=-1:
 				pathList2017[path]= DYCrossSection[key]
 
-bng=[50, 120,150,200,300,400,500,690,900,1250,1610, 2000, 4000, 6070]                               
+bng=[50, 120,150,200,300,400,500,690,900,1250,1610, 2000, 4000, 6070]
+#bng=[200,300,400,500,690,900,1250,1610, 2000, 4000]                               
 bng=numpy.asarray(bng,dtype=numpy.float64)
 reM2016BB=ROOT.TH2D("reM2016BB_e","Response matrix for 2016 BB",len(bng)-1,bng,len(bng)-1,bng)
 reM2016BE=ROOT.TH2D("reM2016BE_e","Response matrix for 2016 BE",len(bng)-1,bng,len(bng)-1,bng)
@@ -61,79 +62,82 @@ genBE2018=ROOT.TH1D("genBE2018_e","MC BB",20000,0,20000)
 recBE2018=ROOT.TH1D("recBE2018_e","MC BE",20000,0,20000)
 #print pathList2018
 for path in pathList2018.keys():
-	f2018=ROOT.TFile.Open(path)
-	num=100000
-	for key in eventNum2018.keys():
-		if path.find(key)!=-1:
-			num=eventNum2018[key]
-	temphist=f2018.Get("ElectronSelectionElectronsAllSignsHistos/DielectronMass_gen_bb")
-	temphist.Scale(pathList2018[path]/num)
-	genBB2018.Add(temphist,1.)
-	temphist=f2018.Get("ElectronSelectionElectronsAllSignsHistos/DielectronMass_bb")
-        temphist.Scale(pathList2018[path]/num)
-        recBB2018.Add(temphist,1.)
-	temphist=f2018.Get("ElectronSelectionElectronsAllSignsHistos/DielectronMass_gen_be")
-        temphist.Scale(pathList2018[path]/num)
-        genBE2018.Add(temphist,1.)
-        temphist=f2018.Get("ElectronSelectionElectronsAllSignsHistos/DielectronMass_be")
-        temphist.Scale(pathList2018[path]/num)
-        recBE2018.Add(temphist,1.)
-	temphist=f2018.Get("ElectronSelectionElectronsAllSignsHistos/DielectronResponse_bb")
-        temphist.Scale(pathList2018[path]/num)
-	reM2018BB.Add(temphist,1.)
-	temphist=f2018.Get("ElectronSelectionElectronsAllSignsHistos/DielectronResponse_be")
-        temphist.Scale(pathList2018[path]/num)
-        reM2018BE.Add(temphist,1.)
+	if path.find("6000toInf")==-1:
+		f2018=ROOT.TFile.Open(path)
+		num=100000
+		for key in eventNum2018.keys():
+			if path.find(key)!=-1:
+				num=eventNum2018[key]
+		temphist=f2018.Get("ElectronSelectionElectronsAllSignsHistos/DielectronMass_gen_bb")
+		temphist.Scale(pathList2018[path]/num)
+		genBB2018.Add(temphist,1.)
+		temphist=f2018.Get("ElectronSelectionElectronsAllSignsHistos/DielectronMass_bb")
+        	temphist.Scale(pathList2018[path]/num)
+        	recBB2018.Add(temphist,1.)
+		temphist=f2018.Get("ElectronSelectionElectronsAllSignsHistos/DielectronMass_gen_be")
+        	temphist.Scale(pathList2018[path]/num)
+        	genBE2018.Add(temphist,1.)
+        	temphist=f2018.Get("ElectronSelectionElectronsAllSignsHistos/DielectronMass_be")
+        	temphist.Scale(pathList2018[path]/num)
+        	recBE2018.Add(temphist,1.)
+		temphist=f2018.Get("ElectronSelectionElectronsAllSignsHistos/DielectronResponse_bb")
+        	temphist.Scale(pathList2018[path]/num)
+		reM2018BB.Add(temphist,1.)
+		temphist=f2018.Get("ElectronSelectionElectronsAllSignsHistos/DielectronResponse_be")
+        	temphist.Scale(pathList2018[path]/num)
+        	reM2018BE.Add(temphist,1.)
 
 for path in pathList2017.keys():
-        f2017=ROOT.TFile.Open(path)
-        num=100000
-        for key in eventNum2017.keys():
-                if path.find(key)!=-1:
-                        num=eventNum2017[key]
-        temphist=f2017.Get("ElectronSelectionElectronsAllSignsHistos/DielectronMass_gen_bb")
-        temphist.Scale(pathList2017[path]/num)
-        genBB2017.Add(temphist,1.)
-        temphist=f2017.Get("ElectronSelectionElectronsAllSignsHistos/DielectronMass_bb")
-        temphist.Scale(pathList2017[path]/num)
-        recBB2017.Add(temphist,1.)
-        temphist=f2017.Get("ElectronSelectionElectronsAllSignsHistos/DielectronMass_gen_be")
-        temphist.Scale(pathList2017[path]/num)
-        genBE2017.Add(temphist,1.)
-        temphist=f2017.Get("ElectronSelectionElectronsAllSignsHistos/DielectronMass_be")
-        temphist.Scale(pathList2017[path]/num)
-        recBE2017.Add(temphist,1.)
-        temphist=f2017.Get("ElectronSelectionElectronsAllSignsHistos/DielectronResponse_bb")
-        temphist.Scale(pathList2017[path]/num)
-        reM2017BB.Add(temphist,1.)
-        temphist=f2017.Get("ElectronSelectionElectronsAllSignsHistos/DielectronResponse_be")
-        temphist.Scale(pathList2017[path]/num)
-        reM2017BE.Add(temphist,1.)
+	if path.find("6000toInf")==-1:
+        	f2017=ROOT.TFile.Open(path)
+        	num=100000
+        	for key in eventNum2017.keys():
+                	if path.find(key)!=-1:
+                        	num=eventNum2017[key]
+        	temphist=f2017.Get("ElectronSelectionElectronsAllSignsHistos/DielectronMass_gen_bb")
+        	temphist.Scale(pathList2017[path]/num)
+        	genBB2017.Add(temphist,1.)
+        	temphist=f2017.Get("ElectronSelectionElectronsAllSignsHistos/DielectronMass_bb")
+        	temphist.Scale(pathList2017[path]/num)
+        	recBB2017.Add(temphist,1.)
+        	temphist=f2017.Get("ElectronSelectionElectronsAllSignsHistos/DielectronMass_gen_be")
+        	temphist.Scale(pathList2017[path]/num)
+        	genBE2017.Add(temphist,1.)
+        	temphist=f2017.Get("ElectronSelectionElectronsAllSignsHistos/DielectronMass_be")
+        	temphist.Scale(pathList2017[path]/num)
+        	recBE2017.Add(temphist,1.)
+        	temphist=f2017.Get("ElectronSelectionElectronsAllSignsHistos/DielectronResponse_bb")
+        	temphist.Scale(pathList2017[path]/num)
+        	reM2017BB.Add(temphist,1.)
+        	temphist=f2017.Get("ElectronSelectionElectronsAllSignsHistos/DielectronResponse_be")
+        	temphist.Scale(pathList2017[path]/num)
+        	reM2017BE.Add(temphist,1.)
 
 for path in pathList2016.keys():
-        f2016=ROOT.TFile.Open(path)
-        num=100000
-        for key in eventNum2016.keys():
-                if path.find(key)!=-1:
-                        num=eventNum2016[key]
-        temphist=f2016.Get("ElectronSelectionElectronsAllSignsHistos/DielectronMass_gen_bb")
-        temphist.Scale(pathList2016[path]/num)
-        genBB2016.Add(temphist,1.)
-        temphist=f2016.Get("ElectronSelectionElectronsAllSignsHistos/DielectronMass_bb")
-        temphist.Scale(pathList2016[path]/num)
-        recBB2016.Add(temphist,1.)
-        temphist=f2016.Get("ElectronSelectionElectronsAllSignsHistos/DielectronMass_gen_be")
-        temphist.Scale(pathList2016[path]/num)
-        genBE2016.Add(temphist,1.)
-        temphist=f2016.Get("ElectronSelectionElectronsAllSignsHistos/DielectronMass_be")
-        temphist.Scale(pathList2016[path]/num)
-        recBE2016.Add(temphist,1.)
-        temphist=f2016.Get("ElectronSelectionElectronsAllSignsHistos/DielectronResponse_bb")
-        temphist.Scale(pathList2016[path]/num)
-        reM2016BB.Add(temphist,1.)
-        temphist=f2016.Get("ElectronSelectionElectronsAllSignsHistos/DielectronResponse_be")
-        temphist.Scale(pathList2016[path]/num)
-        reM2016BE.Add(temphist,1.)
+	if path.find("6000toInf")==-1:
+        	f2016=ROOT.TFile.Open(path)
+        	num=100000
+        	for key in eventNum2016.keys():
+                	if path.find(key)!=-1:
+                        	num=eventNum2016[key]
+        	temphist=f2016.Get("ElectronSelectionElectronsAllSignsHistos/DielectronMass_gen_bb")
+        	temphist.Scale(pathList2016[path]/num)
+        	genBB2016.Add(temphist,1.)
+        	temphist=f2016.Get("ElectronSelectionElectronsAllSignsHistos/DielectronMass_bb")
+        	temphist.Scale(pathList2016[path]/num)
+        	recBB2016.Add(temphist,1.)
+        	temphist=f2016.Get("ElectronSelectionElectronsAllSignsHistos/DielectronMass_gen_be")
+        	temphist.Scale(pathList2016[path]/num)
+        	genBE2016.Add(temphist,1.)
+        	temphist=f2016.Get("ElectronSelectionElectronsAllSignsHistos/DielectronMass_be")
+        	temphist.Scale(pathList2016[path]/num)
+        	recBE2016.Add(temphist,1.)
+        	temphist=f2016.Get("ElectronSelectionElectronsAllSignsHistos/DielectronResponse_bb")
+        	temphist.Scale(pathList2016[path]/num)
+        	reM2016BB.Add(temphist,1.)
+        	temphist=f2016.Get("ElectronSelectionElectronsAllSignsHistos/DielectronResponse_be")
+        	temphist.Scale(pathList2016[path]/num)
+        	reM2016BE.Add(temphist,1.)
 
 genBB2018=genBB2018.Rebin(len(bng)-1,"genBB2018_e",bng)
 recBB2018=recBB2018.Rebin(len(bng)-1,"recBB2018_e",bng)
@@ -161,10 +165,11 @@ for i in range(reM2017BB.GetNbinsX()+2):
                         reM2018BBn.SetBinContent(j,i,val/norm)
                 else:
                         reM2018BBn.SetBinContent(j,i,0)
-reM2018BBn.GetXaxis().SetTitle("Reco[GeV]")
-reM2018BBn.GetYaxis().SetTitle("Gen[GeV]")
+reM2018BBn.GetXaxis().SetTitle("Reconstructed M[GeV]")
+reM2018BBn.GetYaxis().SetTitle("Generated M[GeV]")
+reM2018BBn.GetZaxis().SetRangeUser(1e-3,1)
 reM2018BBn.Draw("COLZ")
-c1.Print("plot/response_matrix_2018BB_e.pdf")
+c1.Print("plot/response_matrix_2018BB_e_V2.pdf")
 
 c2=ROOT.TCanvas("c2","c2",800,800)
 c2.SetLogy()
@@ -179,10 +184,11 @@ for i in range(reM2017BB.GetNbinsX()+2):
                         reM2018BEn.SetBinContent(j,i,val/norm)
                 else:
                         reM2018BEn.SetBinContent(j,i,0)
-reM2018BEn.GetXaxis().SetTitle("Reco[GeV]")
-reM2018BEn.GetYaxis().SetTitle("Gen[GeV]")
+reM2018BEn.GetXaxis().SetTitle("Reconstructed M[GeV]")
+reM2018BEn.GetYaxis().SetTitle("Generated M[GeV]")
+reM2018BEn.GetZaxis().SetRangeUser(1e-3,1)
 reM2018BEn.Draw("COLZ")
-c2.Print("plot/response_matrix_2018BE_e.pdf")
+c2.Print("plot/response_matrix_2018BE_e_V2.pdf")
 
 c3=ROOT.TCanvas("c3","c3",800,800)
 c3.SetLogy()
@@ -197,10 +203,11 @@ for i in range(reM2017BB.GetNbinsX()+2):
                         reM2017BBn.SetBinContent(j,i,val/norm)
                 else:
                         reM2017BBn.SetBinContent(j,i,0)
-reM2017BBn.GetXaxis().SetTitle("Reco[GeV]")
-reM2017BBn.GetYaxis().SetTitle("Gen[GeV]")
+reM2017BBn.GetXaxis().SetTitle("Reconstructed M[GeV]")
+reM2017BBn.GetYaxis().SetTitle("Generated M[GeV]")
+reM2017BBn.GetZaxis().SetRangeUser(1e-3,1)
 reM2017BBn.Draw("COLZ")
-c3.Print("plot/response_matrix_2017BB_e.pdf")
+c3.Print("plot/response_matrix_2017BB_e_V2.pdf")
 
 c4=ROOT.TCanvas("c4","c4",800,800)
 c4.SetLogy()
@@ -215,10 +222,11 @@ for i in range(reM2017BB.GetNbinsX()+2):
                         reM2017BEn.SetBinContent(j,i,val/norm)
 		else:
                         reM2017BEn.SetBinContent(j,i,0)
-reM2017BEn.GetXaxis().SetTitle("Reco[GeV]")
-reM2017BEn.GetYaxis().SetTitle("Gen[GeV]")
+reM2017BEn.GetXaxis().SetTitle("Reconstructed M[GeV]")
+reM2017BEn.GetYaxis().SetTitle("Generated M[GeV]")
+reM2017BEn.GetZaxis().SetRangeUser(1e-3,1)
 reM2017BEn.Draw("COLZ")
-c4.Print("plot/response_matrix_2017BE_e.pdf")
+c4.Print("plot/response_matrix_2017BE_e_V2.pdf")
 
 c5=ROOT.TCanvas("c5","c5",800,800)
 c5.SetLogy()
@@ -233,10 +241,11 @@ for i in range(reM2017BB.GetNbinsX()+2):
                         reM2016BBn.SetBinContent(j,i,val/norm)
                 else:
                         reM2016BBn.SetBinContent(j,i,0)
-reM2016BBn.GetXaxis().SetTitle("Reco[GeV]")
-reM2016BBn.GetYaxis().SetTitle("Gen[GeV]")
+reM2016BBn.GetXaxis().SetTitle("Reconstructed M[GeV]")
+reM2016BBn.GetYaxis().SetTitle("Generated M[GeV]")
+reM2016BBn.GetZaxis().SetRangeUser(1e-3,1)
 reM2016BBn.Draw("COLZ")
-c5.Print("plot/response_matrix_2016BB_e.pdf")
+c5.Print("plot/response_matrix_2016BB_e_v2.pdf")
 
 c6=ROOT.TCanvas("c6","c6",800,800)
 c6.SetLogy()
@@ -251,12 +260,13 @@ for i in range(reM2017BB.GetNbinsX()+2):
 			reM2016BEn.SetBinContent(j,i,val/norm)
 		else:
                         reM2016BEn.SetBinContent(j,i,0)
-reM2016BEn.GetXaxis().SetTitle("Reco[GeV]")
-reM2016BEn.GetYaxis().SetTitle("Gen[GeV]")
+reM2016BEn.GetXaxis().SetTitle("Reconstructed M[GeV]")
+reM2016BEn.GetYaxis().SetTitle("Generated M[GeV]")
+reM2016BEn.GetZaxis().SetRangeUser(1e-3,1)
 reM2016BEn.Draw("COLZ")
-c6.Print("plot/response_matrix_2016BE_e.pdf")
+c6.Print("plot/response_matrix_2016BE_e_V2.pdf")
 
-f=ROOT.TFile("ResponseMatrix_e.root","RECREATE")
+f=ROOT.TFile("ResponseMatrix_e_V2.root","RECREATE")
 reM2016BB.Write()
 reM2016BE.Write()
 reM2016BBn.Write()

@@ -20,15 +20,15 @@ eventNum2016={"50to120":2977600,"120to200":100000,"200to400":100000,"200to400":1
 eventNum2017={"50to120":2965146,"120to200":100000,"200to400":100000,"200to400":100000,"400to800":100000,"800to1400":100000,"1400to2300":100000,"2300to3500":100000,"3500to4500":100000,"4500to6000":100000,"6000toInf":99699}
 eventNum2018={"50to120":2940000,"120to200":100000,"200to400":100000,"200to400":100000,"400to800":100000,"800to1400":100000,"1400to2300":100000,"2300to3500":98000,"3500to4500":100000,"4500to6000":100000,"6000toInf":100000}
 for path in pathList:
-        if path.find("2016")!=-1 and path.find("Inclusive")==-1:
+        if path.find("2016")!=-1 and path.find("Inclusive")==-1 and path.find("6000toInf")==-1:
                 for key in DYCrossSection.keys():
                         if path.find(key)!=-1:
                                 pathList2016[path]= DYCrossSection[key]
-        elif path.find("2018")!=-1 and path.find("Inclusive")==-1:
+        elif path.find("2018")!=-1 and path.find("Inclusive")==-1 and path.find("6000toInf")==-1:
                 for key in DYCrossSection.keys():
                         if path.find(key)!=-1:
                                 pathList2018[path]= DYCrossSection[key]
-        elif path.find("Inclusive")==-1:
+        elif path.find("Inclusive")==-1 and path.find("6000toInf")==-1:
                 for key in DYCrossSection.keys():
                         if path.find(key)!=-1:
 				pathList2017[path]= DYCrossSection[key]
@@ -161,10 +161,11 @@ for i in range(reM2017BB.GetNbinsX()+2):
                         reM2018BBn.SetBinContent(j,i,val/norm)
                 else:
                         reM2018BBn.SetBinContent(j,i,0)
-reM2018BBn.GetXaxis().SetTitle("Reco[GeV]")
-reM2018BBn.GetYaxis().SetTitle("Gen[GeV]")
+reM2018BBn.GetXaxis().SetTitle("Reconstructed M[GeV]")
+reM2018BBn.GetYaxis().SetTitle("Generated M[GeV]")
+reM2018BBn.GetZaxis().SetRangeUser(1e-3,1)
 reM2018BBn.Draw("COLZ")
-c1.Print("plot/response_matrix_2018BB_mu.pdf")
+c1.Print("plot/response_matrix_2018BB_mu_V2.pdf")
 
 c2=ROOT.TCanvas("c2","c2",800,800)
 c2.SetLogy()
@@ -179,10 +180,11 @@ for i in range(reM2017BB.GetNbinsX()+2):
                         reM2018BEn.SetBinContent(j,i,val/norm)
                 else:
                         reM2018BEn.SetBinContent(j,i,0)
-reM2018BEn.GetXaxis().SetTitle("Reco[GeV]")
-reM2018BEn.GetYaxis().SetTitle("Gen[GeV]")
+reM2018BEn.GetXaxis().SetTitle("Reconstructed M[GeV]")
+reM2018BEn.GetYaxis().SetTitle("Generated M[GeV]")
+reM2018BEn.GetZaxis().SetRangeUser(1e-3,1)
 reM2018BEn.Draw("COLZ")
-c2.Print("plot/response_matrix_2018BE_mu.pdf")
+c2.Print("plot/response_matrix_2018BE_mu_V2.pdf")
 
 c3=ROOT.TCanvas("c3","c3",800,800)
 c3.SetLogy()
@@ -197,10 +199,11 @@ for i in range(reM2017BB.GetNbinsX()+2):
                         reM2017BBn.SetBinContent(j,i,val/norm)
                 else:
                         reM2017BBn.SetBinContent(j,i,0)
-reM2017BBn.GetXaxis().SetTitle("Reco[GeV]")
-reM2017BBn.GetYaxis().SetTitle("Gen[GeV]")
+reM2017BBn.GetXaxis().SetTitle("Reconstructed M[GeV]")
+reM2017BBn.GetYaxis().SetTitle("Generated M[GeV]")
+reM2017BBn.GetZaxis().SetRangeUser(1e-3,1)
 reM2017BBn.Draw("COLZ")
-c3.Print("plot/response_matrix_2017BB_mu.pdf")
+c3.Print("plot/response_matrix_2017BB_mu_V2.pdf")
 
 c4=ROOT.TCanvas("c4","c4",800,800)
 c4.SetLogy()
@@ -215,10 +218,11 @@ for i in range(reM2017BB.GetNbinsX()+2):
                         reM2017BEn.SetBinContent(j,i,val/norm)
 		else:
                         reM2017BEn.SetBinContent(j,i,0)
-reM2017BEn.GetXaxis().SetTitle("Reco[GeV]")
-reM2017BEn.GetYaxis().SetTitle("Gen[GeV]")
+reM2017BEn.GetXaxis().SetTitle("Reconstructed M[GeV]")
+reM2017BEn.GetYaxis().SetTitle("Generated M[GeV]")
+reM2017BEn.GetZaxis().SetRangeUser(1e-3,1)
 reM2017BEn.Draw("COLZ")
-c4.Print("plot/response_matrix_2017BE_mu.pdf")
+c4.Print("plot/response_matrix_2017BE_mu_V2.pdf")
 
 c5=ROOT.TCanvas("c5","c5",800,800)
 c5.SetLogy()
@@ -233,10 +237,11 @@ for i in range(reM2017BB.GetNbinsX()+2):
                         reM2016BBn.SetBinContent(j,i,val/norm)
                 else:
                         reM2016BBn.SetBinContent(j,i,0)
-reM2016BBn.GetXaxis().SetTitle("Reco[GeV]")
-reM2016BBn.GetYaxis().SetTitle("Gen[GeV]")
+reM2016BBn.GetXaxis().SetTitle("Reconstructed M[GeV]")
+reM2016BBn.GetYaxis().SetTitle("Generated M[GeV]")
+reM2016BBn.GetZaxis().SetRangeUser(1e-3,1)
 reM2016BBn.Draw("COLZ")
-c5.Print("plot/response_matrix_2016BB_mu.pdf")
+c5.Print("plot/response_matrix_2016BB_mu_V2.pdf")
 
 c6=ROOT.TCanvas("c6","c6",800,800)
 c6.SetLogy()
@@ -251,12 +256,13 @@ for i in range(reM2017BB.GetNbinsX()+2):
 			reM2016BEn.SetBinContent(j,i,val/norm)
 		else:
                         reM2016BEn.SetBinContent(j,i,0)
-reM2016BEn.GetXaxis().SetTitle("Reco[GeV]")
-reM2016BEn.GetYaxis().SetTitle("Gen[GeV]")
+reM2016BEn.GetXaxis().SetTitle("Reconstructed M[GeV]")
+reM2016BEn.GetYaxis().SetTitle("Generated M[GeV]")
+reM2016BEn.GetZaxis().SetRangeUser(1e-3,1)
 reM2016BEn.Draw("COLZ")
-c6.Print("plot/response_matrix_2016BE_mu.pdf")
+c6.Print("plot/response_matrix_2016BE_mu_V2.pdf")
 
-f=ROOT.TFile("ResponseMatrix_mu.root","RECREATE")
+f=ROOT.TFile("ResponseMatrix_mu_V2.root","RECREATE")
 reM2016BB.Write()
 reM2016BE.Write()
 reM2016BBn.Write()
