@@ -164,6 +164,16 @@ def scale(hist1,hist2):
 class unfoldedResult:
 	def __init__(self,year,flavor,category):
 		f=ROOT.TFile.Open("dataCollection.root")
+		lumi={}
+                lumi["electron"]={"2016":35.9*1000,"2017":41.529*1000,"2018":59.97*1000}
+                lumi["muon"]={"2016":36.3*1000,"2017":42.135*1000,"2018":61.608*1000}
+                zFac={}
+                zFac["muon"]={}
+                zFac["muon"]["bb"]={"2016":zScale2016["muons"],"2017":zScale["muons"],"2018":zScale2018["muons"]}
+                zFac["muon"]["be"]={"2016":zScale2016["muons"],"2017":zScale["muons"],"2018":zScale2018["muons"]}
+                zFac["electron"]={}
+                zFac["electron"]["bb"]={"2016":zScale2016["electrons"][1],"2017":zScale["electrons"][1],"2018":zScale2018["electrons"][1]}
+                zFac["electron"]["be"]={"2016":zScale2016["electrons"][2],"2017":zScale["electrons"][2],"2018":zScale2018["electrons"][2]}
 		name=flavor+"_"+year+"_"+category+"_response_combine"
 		reMraw=f.Get(name)
 		reM=reBin2D(reMraw)
@@ -178,6 +188,7 @@ class unfoldedResult:
 		bkgName=flavor+"_"+year+"_"+category+"_bkg"
 		bkgRaw=f.Get(bkgName)
 		bkg=reBin1D(bkgRaw)
+		#bkg.Scale(lumi[flavor][year]*zFac[flavor][category][year])
 		reAverage(bkg)
 		self.bkg=bkg
 		self.unfoldedData=handle.doUnfold(data,bkg)
@@ -241,16 +252,6 @@ class unfoldedResult:
 		average(genMass)
 		average(unfoldedRecoMass)
 		average(recoMass_kFac)
-		lumi={}
-		lumi["electron"]={"2016":35.9*1000,"2017":41.529*1000,"2018":59.97*1000}
-		lumi["muon"]={"2016":36.3*1000,"2017":42.135*1000,"2018":61.608*1000}
-		zFac={}
-		zFac["muon"]={}
-		zFac["muon"]["bb"]={"2016":zScale2016["muons"],"2017":zScale["muons"],"2018":zScale2018["muons"]}
-		zFac["muon"]["be"]={"2016":zScale2016["muons"],"2017":zScale["muons"],"2018":zScale2018["muons"]}
-		zFac["electron"]={}
-		zFac["electron"]["bb"]={"2016":zScale2016["electrons"][1],"2017":zScale["electrons"][1],"2018":zScale2018["electrons"][1]}
-		zFac["electron"]["be"]={"2016":zScale2016["electrons"][2],"2017":zScale["electrons"][2],"2018":zScale2018["electrons"][2]}
 		recoMass.Scale(lumi[flavor][year]*zFac[flavor][category][year])
 		genMass.Scale(lumi[flavor][year]*zFac[flavor][category][year])
 		unfoldedRecoMass.Scale(lumi[flavor][year]*zFac[flavor][category][year])
@@ -265,6 +266,15 @@ class unfoldedResult:
 			genMassfin.Scale(lumi[flavor][year]*zFac[flavor][category][year])
 			genMassfinID.Scale(lumi[flavor][year]*zFac[flavor][category][year])
 			mcErr=getErrors(genMassfin,[genMassfinID],["ID"])
+			trig=[]
+			for i in range(1,genMassfin.GetNbinsX()+1):
+				val=genMassfin.GetBinContent(i)
+				if category=="bb":
+					err=0.003*val
+				else:
+					err=0.007*val
+				trig.append(err)
+			mcErr["trig"]=numpy.asarray(trig)
                 else:
 			genMassfin=reBinfin(genMassRaw)
 			name=flavor+"_"+year+"_"+category+"_"+"genMass_"+"combine_pileUp"
@@ -279,12 +289,26 @@ class unfoldedResult:
                         name=flavor+"_"+year+"_"+category+"_"+"genMass_"+"combine_prefireDown"
                         genMassRawPreD=f.Get(name)
                         genMassfinPreD=reBinfin(genMassRawPreD)
+			genMassfin.Scale(lumi[flavor][year]*zFac[flavor][category][year])
+			genMassfinPU.Scale(lumi[flavor][year]*zFac[flavor][category][year])
+			genMassfinPD.Scale(lumi[flavor][year]*zFac[flavor][category][year])
+			genMassfinPreU.Scale(lumi[flavor][year]*zFac[flavor][category][year])
+			genMassfinPreD.Scale(lumi[flavor][year]*zFac[flavor][category][year])
 			average(genMassfin)
 			average(genMassfinPU)
 			average(genMassfinPD)
 			average(genMassfinPreU)
 			average(genMassfinPreD)
 			mcErr=getErrors(genMassfin,[[genMassfinPU,genMassfinPD],[genMassfinPreU,genMassfinPreD]],["PU","prefire"])
+			eff=[]
+			for i in range(1,genMassfin.GetNbinsX()+1):
+                                val=genMassfin.GetBinContent(i)
+                                if category=="bb":
+                                        err=0.06*val
+                                else:
+                                        err=0.08*val
+                                eff.append(err)
+			mcErr["eff"]=numpy.asarray(eff)
 		self.mcUncertainties=mcErr
 		self.recoMass=recoMass
 		self.genMass=genMass
@@ -362,7 +386,7 @@ for i in range(1,unfoldedData_el_be.GetNbinsX()+1):
 genMassfin_mu_bb=result2016_mu_bb.genMassfin.Clone()
 genMassfin_mu_bb.Add(result2017_mu_bb.genMassfin.Clone())
 genMassfin_mu_bb.Add(result2018_mu_bb.genMassfin.Clone())
-genErr2_mu_bb=result2016_mu_bb.mcUncertainties["ID"]**2+(result2017_mu_bb.mcUncertainties["ID"]+result2018_mu_bb.mcUncertainties["ID"])**2
+genErr2_mu_bb=result2016_mu_bb.mcUncertainties["ID"]**2+(result2017_mu_bb.mcUncertainties["ID"]+result2018_mu_bb.mcUncertainties["ID"])**2+result2016_mu_bb.mcUncertainties["trig"]**2+result2017_mu_bb.mcUncertainties["trig"]**2+result2018_mu_bb.mcUncertainties["trig"]**2
 for i in range(1,genMassfin_mu_bb.GetNbinsX()+1):
         err=genMassfin_mu_bb.GetBinError(i)**2+genErr2_mu_bb[i-1]
         err=math.sqrt(err)
@@ -370,7 +394,7 @@ for i in range(1,genMassfin_mu_bb.GetNbinsX()+1):
 genMassfin_mu_be=result2016_mu_be.genMassfin.Clone()
 genMassfin_mu_be.Add(result2017_mu_be.genMassfin.Clone())
 genMassfin_mu_be.Add(result2018_mu_be.genMassfin.Clone())
-genErr2_mu_be=result2016_mu_be.mcUncertainties["ID"]**2+result2017_mu_be.mcUncertainties["ID"]**2+result2018_mu_be.mcUncertainties["ID"]**2
+genErr2_mu_be=result2016_mu_be.mcUncertainties["ID"]**2+result2017_mu_be.mcUncertainties["ID"]**2+result2018_mu_be.mcUncertainties["ID"]**2+result2016_mu_be.mcUncertainties["trig"]**2+result2017_mu_be.mcUncertainties["trig"]**2+result2018_mu_be.mcUncertainties["trig"]**2
 for i in range(1,genMassfin_mu_be.GetNbinsX()+1):
         err=genMassfin_mu_be.GetBinError(i)**2+genErr2_mu_be[i-1]
         err=math.sqrt(err)
@@ -378,7 +402,7 @@ for i in range(1,genMassfin_mu_be.GetNbinsX()+1):
 genMassfin_el_bb=result2016_el_bb.genMassfin.Clone()
 genMassfin_el_bb.Add(result2017_el_bb.genMassfin.Clone())
 genMassfin_el_bb.Add(result2018_el_bb.genMassfin.Clone())
-genErr2_el_bb=(result2016_el_bb.mcUncertainties["PU"]+result2017_mu_bb.mcUncertainties["ID"]+result2018_mu_bb.mcUncertainties["ID"])**2+result2016_el_bb.mcUncertainties["prefire"]**2+result2017_el_bb.mcUncertainties["prefire"]**2+result2018_el_bb.mcUncertainties["prefire"]**2
+genErr2_el_bb=(result2016_el_bb.mcUncertainties["PU"]+result2017_el_bb.mcUncertainties["PU"]+result2018_el_bb.mcUncertainties["PU"])**2+result2016_el_bb.mcUncertainties["prefire"]**2+result2017_el_bb.mcUncertainties["prefire"]**2+result2018_el_bb.mcUncertainties["prefire"]**2+result2016_el_bb.mcUncertainties["eff"]**2+result2017_el_bb.mcUncertainties["eff"]**2+result2018_el_bb.mcUncertainties["eff"]**2
 for i in range(1,genMassfin_el_bb.GetNbinsX()+1):
         err=genMassfin_el_bb.GetBinError(i)**2+genErr2_el_bb[i-1]
         err=math.sqrt(err)
@@ -386,7 +410,7 @@ for i in range(1,genMassfin_el_bb.GetNbinsX()+1):
 genMassfin_el_be=result2016_el_be.genMassfin.Clone()
 genMassfin_el_be.Add(result2017_el_be.genMassfin.Clone())
 genMassfin_el_be.Add(result2018_el_be.genMassfin.Clone())
-genErr2_el_be=(result2016_el_be.mcUncertainties["PU"]+result2017_mu_be.mcUncertainties["ID"]+result2018_mu_be.mcUncertainties["ID"])**2+result2016_el_be.mcUncertainties["prefire"]**2+result2017_el_be.mcUncertainties["prefire"]**2+result2018_el_be.mcUncertainties["prefire"]**2
+genErr2_el_be=(result2016_el_be.mcUncertainties["PU"]+result2017_el_be.mcUncertainties["PU"]+result2018_el_be.mcUncertainties["PU"])**2+result2016_el_be.mcUncertainties["prefire"]**2+result2017_el_be.mcUncertainties["prefire"]**2+result2018_el_be.mcUncertainties["prefire"]**2+result2016_el_be.mcUncertainties["eff"]**2+result2017_el_be.mcUncertainties["eff"]**2+result2018_el_be.mcUncertainties["eff"]**2
 for i in range(1,genMassfin_el_be.GetNbinsX()+1):
         err=genMassfin_el_be.GetBinError(i)**2+genErr2_el_be[i-1]
         err=math.sqrt(err)
@@ -415,6 +439,9 @@ unfoldedData_mu_be.Sumw2()
 unfoldedData_el_bb.Sumw2()
 unfoldedData_el_be.Sumw2()
 
+
+Fac=scale(genMassfin_el_bb,genMassfin_mu_bb)
+genMassfin_mu_bb.Scale(Fac)
 h_ratioMCbb.Divide(genMassfin_mu_bb,genMassfin_el_bb)
 #h_ratioDatabb.Divide(unfoldedData_mu_bb,unfoldedData_el_bb)
 h_ratioMCbb.Fit(func,"","",200,3000)
@@ -422,7 +449,7 @@ h_ratioMCbb.GetXaxis().SetTitle("m[GeV]")
 h_ratioMCbb.GetYaxis().SetTitle("R_{mumu/ee}")
 c1=ROOT.TCanvas("c1","c1",800,800)
 c1.SetLogx()
-h_ratioMCbb.Draw("hist")
+h_ratioMCbb.Draw()
 func.Draw("same")
 c1.Print("reM_v1/fit_to_mc_bb.pdf")
 Fac=scale(unfoldedData_el_bb,unfoldedData_mu_bb)
@@ -448,6 +475,8 @@ h_ratioDatabb.GetYaxis().SetTitle("R_{mumu/ee}")
 h_ratioDatabb.Draw("l")
 c2.Print("reM_v1/ratioPlot_bb.pdf")
 
+Fac=scale(genMassfin_el_be,genMassfin_mu_be)
+genMassfin_mu_be.Scale(Fac)
 h_ratioMCbe.Divide(genMassfin_mu_be,genMassfin_el_be)
 #h_ratioDatabb.Divide(unfoldedData_mu_bb,unfoldedData_el_bb)
 h_ratioMCbe.Fit(func,"","",200,3000)
